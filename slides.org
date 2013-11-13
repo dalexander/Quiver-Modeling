@@ -1,0 +1,109 @@
+#+TITLE: Quiver: modeling consensus accuracy
+#+AUTHOR: David H. Alexander \newline  Pacific Biosciences
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:
+#+LINK_HOME:
+#+XSLT:
+#+LaTeX_HEADER: \usepackage{mathpple}
+#+LaTeX_HEADER: \usepackage{dsfont}
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{setspace}
+#+LaTeX_HEADER: \newcommand{\R}{\textsuperscript{\textregistered}}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [serif,11pt]
+#+STARTUP: beamer
+#+BEAMER_FRAME_LEVEL: 2
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+
+
+* Modeling consensus accuracy
+
+** Seeking a model for consensus accuracy
+   - How do characteristics of chemistry influence consensus accuracy?
+     - Merge rate
+     - Branch rate
+     - Miscall rate
+   - Predictions for C2, XL, P4, and dyeball chemistries
+
+** Previous approaches
+   - Most obvious approach is binomial sampling model,
+     $$math goes here$$
+   - This approach makes wrong assumptions about PacBio
+     - Suggests very high consensus accuracy
+     - For PacBio, aligning the reads is the challenge, not tabulating
+       bases in columns (miscall rate ~0.5%, indel rate ~12-15%)
+     - Homopolymer errors are the problem
+
+** Our approach: focus on homopolymers
+   #+CAPTION: /E. coli/ K12 homopolymer length distribution
+   [[./img/ecoli-hp-dist.pdf]]
+
+
+** Simple model for homopolymer errors                            :B_columns:
+   :PROPERTIES:
+   :BEAMER_env: columns
+   :END:
+
+*** Math                                              :BMCOL:B_ignoreheading:
+    :PROPERTIES:
+    :BEAMER_col: 3in
+    :BEAMER_env: ignoreheading
+    :END:
+    \begin{doublespacing}
+    \begin{gather*}
+    Y = X + B - M; \\
+    B \sim \mathrm{Bin}(X, \beta); \\
+    M \sim \mathrm{Bin}(X-1, \mu); \\
+    B \perp M
+    \end{gather*}
+    \end{doublespacing}
+    \vspace{0.3in}
+
+*** Definitions                                      :BMCOL:B_beamercolorbox:
+    :PROPERTIES:
+    :BEAMER_col: 2in
+    :BEAMER_env: beamercolorbox
+    :END:
+    $Y$: observed HP length \\
+    $X$: true HP length \\
+    $B$: branches \\
+    $M$: merges \\
+    $\beta$: branching rate \\
+    $\mu$: merging rate \\
+
+** Parameters estimated from EDNA
+   | Chemistry        | Branch | Merge |  Dark |
+   |------------------+--------+-------+-------|
+   | C2               |  0.061 | 0.067 | 0.026 |
+   | P4C2             |  0.056 | 0.057 | 0.023 |
+   | Dyeball.9566.Std |  0.029 | 0.154 | 0.048 |
+   | Dyeball.Final    |  0.035 | 0.120 | 0.038 |
+
+   /For now, averaging across channels, SNRs/
+
+
+** Model (with C2 parameters) seems realistic
+   #+ATTR_LaTeX: width=3.5in
+    #+CAPTION: Monte-Carlo simulated observed HP length distribution
+   [[./img/observed-hp-length-simulation.pdf]]
+
+** Predicted HP accuracy by length, coverage (C2 params)
+   #+ATTR_LaTeX: width=4.5in
+   [[./img/hp-accuracy-by-length.pdf]]
+
+** Distribution of homopolymer errors by length (C2 params)
+   #+ATTR_LaTeX: width=4.5in
+   [[./img/proportion-of-errors-by-hp-length.pdf]]
+
+   (Based on distribution of HP lengths in /E. coli/ K12)
+
+** Overall consensus accuracy prediction for /E. coli/ K12
+   #+ATTR_LaTeX: width=4.5in
+   [[./img/coverage-titration.pdf]]
