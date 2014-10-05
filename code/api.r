@@ -11,6 +11,7 @@ library(Rcpp)
 
 source("hpSim.r")
 sourceCpp("nativeCode.cpp")
+source("estimators.r")
 
 ALL_COVERAGE <- c(5,10,20,30,40,50,60)
 
@@ -23,8 +24,8 @@ tabulateHomopolymerContent <- function(fastaFilename)
         stop("This function doesn't really work yet.  Sorry.")
     }
     totalBases = sum(hpCounts$HpLength * hpCounts$Count)
-    ddply(ecoliHps, .(HpLength, Base),
-          summarize, Frequency=sum(Count)/totalBases)
+    ddply(hpCounts, .(HpLength, Base),
+          here(summarize), Count=Count, Frequency=sum(Count)/totalBases)
 
 }
 
@@ -63,9 +64,10 @@ calculateConsensusErrorRates <- function(rawErrorRates, coverageLevels=ALL_COVER
 
 predictAccuracy <- function(consensusErrorRates, hpLengthDist)
 {
+  totalBases <- sum(hpLengthDist$HpLength * hpLengthDist$Count)
   merged <- within(merge(consensusErrorRates,  hpLengthDist),
                    TotalErrorRate <- Frequency * (1-Accuracy))
-  qvs <- ddply(merged, .(Coverage), summarize,
+  qvs <- ddply(merged, .(Coverage), here(summarize),
                QV = -10*log10(max(1/totalBases, sum(TotalErrorRate))))
   qvs
 }
