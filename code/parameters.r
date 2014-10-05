@@ -48,10 +48,10 @@ if (0) {
     #
     ednaJobs <- list(P4C2                 = 207643,
                      P5C3.1               = 207617,
-                     e11063P_C3_8pctFMP   = 207618,
-                     e11063P_C4DB_8pctFMP = 207662,
+                     e11063P_C3_8FMP      = 207618,
+                     e11063P_C4DB_8FMP    = 207662,
                      e11063P_MonoSG1_4FMP = 207620,
-                     e11063P_DiSG1_4FMP   = 207770)
+                     e11063P_DiSG1_8FMP   = 207770)
 
     allRates  <- lapply(ednaJobs, loadRates)
 
