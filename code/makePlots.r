@@ -23,34 +23,6 @@ if (0) {
     load("accTbls.rda")
 }
 
-# ------------------------------------------------------------------------------
-# C2 plots
-#
-
-#
-# HP accuracy by HP len, coverage
-#
-qplot(Coverage, Accuracy, color=as.ordered(HpLength), data=accTbls$P4C2) +
-    geom_line() +
-    facet_grid(.~Base)
-
-
-
-# -----------
-# Dyeballs
-#
-accDf <- pbutils::collapse(accTbls, "Chemistry")
-accDf.Dyeballs <- subset(accDf, (Chemistry %in% c("P5C3.LowSNR",
-                                                  "P5C3.LowSNR.Swap",
-                                                  "P5C3.HighSNR",
-                                                  "P5C3.HighSNR.Swap")))
-
-qplot(Coverage, Accuracy, color=Chemistry, data=subset(accDf.Dyeballs, HpLength==5)) +
-    geom_line() +
-    facet_grid(~Base)
-
-
-
 
 # ------------------------------------------------------------------------------
 # Compare chemistries (coverage titration)
