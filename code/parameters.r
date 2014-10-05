@@ -13,7 +13,7 @@ loadRates <- function(jobId)
     path <- fetchSecondaryFile(jobId, "edna.csv")
     if (identical(path, character(0)))
         stop("edna.csv not found");
-    tbl <- subset(read.csv(path, nrows=10000),
+    tbl <- subset(read.csv(path, nrows=100000),
                   select=c(Base, InsertOnA, InsertOnC, InsertOnG, InsertOnT, Merge, Dark))
     m <- melt(tbl, id.vars=c("Base"), variable.name="ErrorMode", value.name="Rate")
     rates <- ddply(m, .(Base, ErrorMode), summarize, Rate=mean(Rate))
