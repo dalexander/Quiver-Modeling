@@ -15,22 +15,6 @@ microbenchmark(
     B={ sample(X, 100, replace=T) })
 
 
-## simulatedHpReadLength.Algebraic <- function(nObs, tplHpLen, params)
-## {
-##     ## Should we also handle model dark pulses?
-##     ## And what about noncognate extras?
-##     branch
-
-
-
-##     nBranches <- rbinom(nObs, tplHpLen, params[["Branch"]])
-##     nMerges   <- rbinom(nObs, tplHpLen-1, params[["Merge"]] + params[["Dark"]])
-##     nBranches - nMerges + tplHpLen
-## }
-
-
-
-
 draws <- simulatedHpReadLength(10000, 5, allParams$C2)
 tbl   <- table(draws)
 

@@ -31,25 +31,15 @@ loadParams <- function(jobId)
     colMeans(rates)
 }
 
-ednaJobs <- list(P4C2=186197,
-                 C2=184047,
-                 P5C3.LowSNR=196129,
-                 P5C3.HighSNR=196134)
 
 if (0) {
+    ednaJobs <- list(P4C2   = 186197,
+                     C2     = 184047,
+                     P5C3.1 =  ))
+
     allParams <- lapply(ednaJobs, loadParams)
     allRates  <- lapply(ednaJobs, loadRates)
     save(allParams, allRates, file="params.rda")
 } else {
     load("params.rda")
-}
-
-
-if (1) {
-    # Add the dye swap experiment
-    allRates$P5C3.LowSNR.Swap <- allRates$P5C3.LowSNR[,]
-    row.names(allRates$P5C3.LowSNR.Swap) <- c("A", "T", "G", "C")
-
-    allRates$P5C3.HighSNR.Swap <- allRates$P5C3.HighSNR[,]
-    row.names(allRates$P5C3.HighSNR.Swap) <- c("A", "T", "G", "C")
 }
